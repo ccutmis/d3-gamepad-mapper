@@ -7,10 +7,9 @@ import win32api
 from time import sleep
 import msvcrt
 import myModule.joystick_api as JoyStick
-#import myModule.keyboard_api as KeyBoard
+from myModule.WindowMgr import *
 import myModule.mouse_api as Mouse
 from pynput.keyboard import Key, Controller
-keyboard = Controller()
 
 def val_in_key_map(tmp_key):
     global KEY_MAP
@@ -20,6 +19,7 @@ def val_in_key_map(tmp_key):
         else:
             return False
 def process_btns(btns):
+    keyboard = Controller()
     global keys_stat_last,KEY_CONFIG,BTN_DICT,str_for_print_last
     global KEY_MAP
     x=0
@@ -100,40 +100,50 @@ if __name__ == '__main__':
     tmp_key_cfg_x=""
     cx,cy=Mouse.get_pos()
     xy_offset=XY_OFFSET_UNIT
+    w=WindowMgr()
     #全域變數區.end
     while run:
         sleep(DELAY_SECOND)
         if msvcrt.kbhit() and msvcrt.getch() == chr(8).encode(): # detect F10
             run = False
-        ret, info = JoyStick.joyGetPosEx(id)
-        if ret:
-            btns = [(1 << i) & info.dwButtons != 0 for i in range(caps.wNumButtons)]
-            axisXYZ = [info.dwXpos-startinfo.dwXpos, info.dwYpos-startinfo.dwYpos, info.dwZpos-startinfo.dwZpos]
-            axisRUV = [info.dwRpos-startinfo.dwRpos, info.dwUpos-startinfo.dwUpos, info.dwVpos-startinfo.dwVpos]
-
-            #左右小搖桿同一時間只能有一個有作用(避免互相干擾)
-            right_stick_is_working=False
-            if any([abs(v) > 10 for v in axisRUV]): #右小搖桿
-                tx= 0 if axisRUV[1]==128 else ((xy_offset*2) if axisRUV[1]>128 else (-xy_offset*2))
-                ty = 0 if axisRUV[0]==-129 else ((-xy_offset*2) if axisRUV[0]<-129 else (xy_offset*2))
-                if tx!=0 or ty!=0:
-                    cx,cy=Mouse.move_to(tx,ty)
-                    right_stick_is_working=True
-            #右小搖桿沒動作的話左邊搖桿才會work
-            if right_stick_is_working==False and any([abs(v) > 10 for v in axisXYZ]): #左小搖桿
-                    tx= 0 if axisXYZ[0]==128 else ((XY_OFFSET_UNIT*2) if axisXYZ[0]>128 else (-XY_OFFSET_UNIT*2))
-                    ty = 0 if axisXYZ[1]==-129 else ((-XY_OFFSET_UNIT*2) if axisXYZ[1]<-129 else (XY_OFFSET_UNIT*2))
+        #判斷當前視窗完整標題文字是否包含 ACTIVE_WIN_TITLE 設定之文字，若是才繼續後續處理...
+        if ACTIVE_WIN_TITLE in w.active_window_title():
+            win_pos_size=w.get_window_pos_size() #[x,y,w,h]
+            x_center=int(win_pos_size[0]+(win_pos_size[2]/2))
+            y_center=int(win_pos_size[1]+(win_pos_size[3]/2))
+            #print(win_pos_size)
+            #print(x_center,y_center)
+            ret, info = JoyStick.joyGetPosEx(id)
+            if ret:
+                btns = [(1 << i) & info.dwButtons != 0 for i in range(caps.wNumButtons)]
+                axisXYZ = [info.dwXpos-startinfo.dwXpos, info.dwYpos-startinfo.dwYpos, info.dwZpos-startinfo.dwZpos]
+                axisRUV = [info.dwRpos-startinfo.dwRpos, info.dwUpos-startinfo.dwUpos, info.dwVpos-startinfo.dwVpos]
+    
+                #左右小搖桿同一時間只能有一個有作用(避免互相干擾)
+                right_stick_is_working=False
+                if any([abs(v) > 10 for v in axisRUV]): #右小搖桿
+                    tx= 0 if axisRUV[1]==128 else ((xy_offset*2) if axisRUV[1]>128 else (-xy_offset*2))
+                    ty = 0 if axisRUV[0]==-129 else ((-xy_offset*2) if axisRUV[0]<-129 else (xy_offset*2))
                     if tx!=0 or ty!=0:
                         cx,cy=Mouse.move_to(tx,ty)
-                    #如果 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True 則按一下滑鼠
-                    if (tx!=0 or ty!=0) and SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
-                        Mouse.click('left',cx,cy,1)
-                        sleep(0.01)
-                        Mouse.click('left',cx,cy,0)
-                    if axisXYZ[2]>0:
-                        btns[8]=True
-                    elif axisXYZ[2]<0:
-                        btns[9]=True
-
-            process_btns(btns)
+                        right_stick_is_working=True
+                #右小搖桿沒動作的話左邊搖桿才會work
+                if right_stick_is_working==False and any([abs(v) > 10 for v in axisXYZ]): #左小搖桿
+                        tx= 0 if axisXYZ[0]==128 else ((XY_OFFSET_UNIT*10) if axisXYZ[0]>128 else (-XY_OFFSET_UNIT*10))
+                        ty = 0 if axisXYZ[1]==-129 else ((-XY_OFFSET_UNIT*10) if axisXYZ[1]<-129 else (XY_OFFSET_UNIT*10))
+                        if tx!=0 or ty!=0:
+                            Mouse.set_pos(x_center,y_center)
+                            sleep(0.01)
+                            cx,cy=Mouse.move_to(tx,ty)
+                        #如果 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True 則按一下滑鼠
+                        if (tx!=0 or ty!=0) and SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
+                            Mouse.click('left',cx,cy,1)
+                            sleep(0.01)
+                            Mouse.click('left',cx,cy,0)
+                        if axisXYZ[2]>0:
+                            btns[8]=True
+                        elif axisXYZ[2]<0:
+                            btns[9]=True
+    
+                process_btns(btns)
     print("按下 [ ← Backspace ] 程式結束")
