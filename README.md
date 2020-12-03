@@ -1,3 +1,6 @@
+[![youtube demo ](https://blzmedia-a.akamaihd.net/d3/media/screenshots/guide/en-us/uee/xboxone-controls-thumb.jpg)](https://www.youtube.com/watch?v=sGJoHM30Mwc)
+
+
 # 關於 D3-Gamepad-Mapper 程式
 
 -----
@@ -131,6 +134,9 @@ https://forum.gamer.com.tw/C.php?bsn=21400&snA=367056&tnum=2&last=1#down
 
 
 # 參考網路資源:
+
+## D3官網對於家機搖桿的設置參考
+https://diablo3.blizzard.com/en-us/game/guide/gameplay/fundamentals
 
 ## get controller event:
 https://stackoverflow.com/questions/60309652/how-to-get-usb-controller-gamepad-to-work-with-python
