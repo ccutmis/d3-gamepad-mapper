@@ -147,6 +147,8 @@ https://stackoverflow.com/questions/4263608/ctypes-mouse-events
 ## simulor keydown:
 https://stackoverflow.com/questions/11906925/python-simulate-keydown/11910555
 
+## pynput使用簡單說明
+https://www.itread01.com/content/1541887278.html
 
 ## no-use-in-win:
 
