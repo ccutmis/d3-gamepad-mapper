@@ -8,7 +8,7 @@
 
 ## 目錄
 
-1. (https://github.com/ccutmis/d3-gamepad-mapper#1-%E9%97%9C%E6%96%BC-d3-gamepad-mapper--about) 關於 D3-Gamepad-Mapper | About
+1. [關於 D3-Gamepad-Mapper | About](https://github.com/ccutmis/d3-gamepad-mapper#1-%E9%97%9C%E6%96%BC-d3-gamepad-mapper--about)
 2. 下載與安裝 | Download & Install
 3. 如何使用 | How to Use
 4. 注意事項 | Notice
