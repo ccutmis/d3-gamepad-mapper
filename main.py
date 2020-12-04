@@ -11,6 +11,35 @@ from myModule.WindowMgr import *
 import myModule.mouse_api as Mouse
 from pynput.keyboard import Key, Controller
 
+theta=30;
+alpha=45;
+theta*=Math.PI/180;
+alpha*=Math.PI/180;
+sinTheta=Math.sin(theta);
+cosTheta=Math.cos(theta);
+sinAlpha=Math.sin(alpha);
+cosAlpha=Math.cos(alpha);
+
+def cod_xy_to_iso_xy(codX,codY):
+  tmpx,tmpz=mapToIsoWorld(codX,codY)
+  tmpx,tmpy=mapToScreen(tmpx,(codY/1.3),tmpz)
+  return tmpx,tmpy
+
+def mapToScreen(xpp,ypp,zpp):
+  yp=ypp
+  xp=(xpp*cosAlpha)+(zpp*sinAlpha)
+  zp=(zpp*cosAlpha)-(xpp*sinAlpha)
+  x=xp
+  y=(yp*cosTheta)-(zp*sinTheta)
+  return x,y
+
+def mapToIsoWorld(screenX,screenY):
+  z=(screenX/cosAlpha)-(screenY/(sinAlpha*sinTheta))*(1/(cosAlpha/sinAlpha+sinAlpha/cosAlpha))
+  z=int(z)
+  x=(1/cosAlpha)*(screenX-z*sinAlpha)
+  x=int(x)
+  return x,z
+
 def val_in_key_map(tmp_key):
     global KEY_MAP
     for key in KEY_MAP:
