@@ -10,20 +10,21 @@ import myModule.joystick_api as JoyStick
 from myModule.WindowMgr import *
 import myModule.mouse_api as Mouse
 from pynput.keyboard import Key, Controller
+import math
 
 theta=30;
 alpha=45;
-theta*=Math.PI/180;
-alpha*=Math.PI/180;
-sinTheta=Math.sin(theta);
-cosTheta=Math.cos(theta);
-sinAlpha=Math.sin(alpha);
-cosAlpha=Math.cos(alpha);
+theta*=math.pi/180;
+alpha*=math.pi/180;
+sinTheta=math.sin(theta);
+cosTheta=math.cos(theta);
+sinAlpha=math.sin(alpha);
+cosAlpha=math.cos(alpha);
 
 def cod_xy_to_iso_xy(codX,codY):
   tmpx,tmpz=mapToIsoWorld(codX,codY)
   tmpx,tmpy=mapToScreen(tmpx,(codY/1.3),tmpz)
-  return tmpx,tmpy
+  return int(tmpx),int(tmpy)
 
 def mapToScreen(xpp,ypp,zpp):
   yp=ypp
@@ -158,17 +159,25 @@ if __name__ == '__main__':
                         right_stick_is_working=True
                 #右小搖桿沒動作的話左邊搖桿才會work
                 if right_stick_is_working==False and any([abs(v) > 10 for v in axisXYZ]): #左小搖桿
-                        tx= 0 if axisXYZ[0]==128 else ((XY_OFFSET_UNIT*10) if axisXYZ[0]>128 else (-XY_OFFSET_UNIT*10))
-                        ty = 0 if axisXYZ[1]==-129 else ((-XY_OFFSET_UNIT*10) if axisXYZ[1]<-129 else (XY_OFFSET_UNIT*10))
+                        tx= 0 if axisXYZ[0]==128 else ((XY_OFFSET_UNIT) if axisXYZ[0]>128 else (-XY_OFFSET_UNIT))
+                        ty = 0 if axisXYZ[1]==-129 else ((-XY_OFFSET_UNIT) if axisXYZ[1]<-129 else (XY_OFFSET_UNIT))
                         if tx!=0 or ty!=0:
-                            Mouse.set_pos(x_center,y_center)
-                            sleep(0.01)
-                            cx,cy=Mouse.move_to(tx,ty)
-                        #如果 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True 則按一下滑鼠
-                        if (tx!=0 or ty!=0) and SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
-                            Mouse.click('left',cx,cy,1)
-                            sleep(0.01)
-                            Mouse.click('left',cx,cy,0)
+                            #如果 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True
+                            if SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
+                                tx=tx*8
+                                ty=ty*5 if ty<0 else ty*8
+                                Mouse.set_pos(x_center,y_center)
+                                sleep(0.01)
+                                ofx,ofy=cod_xy_to_iso_xy(x_center+tx,y_center+ty)
+                                Mouse.set_pos(ofx,ofy)
+                                cx,cy=Mouse.get_pos()
+                                Mouse.click('left',cx,cy,1)
+                                sleep(0.01)
+                                Mouse.click('left',cx,cy,0)
+                            else:
+                                tx=tx*2
+                                ty=ty*2
+                                cx,cy=Mouse.move_to(tx,ty)
                         if axisXYZ[2]>0:
                             btns[8]=True
                         elif axisXYZ[2]<0:

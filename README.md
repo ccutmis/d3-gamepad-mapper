@@ -2,7 +2,7 @@
 
 # D3-Gamepad-Mapper Introduction
 
-### 更新日期: 2020-12-04 ver.0007a
+### 更新日期: 2020-12-04 18:30:00 ver.0008a
 
 -----
 
@@ -30,7 +30,7 @@
 
 D3-Gamepad-Mapper下載點:
 
-[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0007a.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0007a.zip)
+[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0008a.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0008a.zip)
 
 下載並解壓縮會得到一個 dist 資料夾，裡面有兩個檔案:
 
@@ -110,6 +110,13 @@ BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_B
 -----
 
 ## 6. 更新日誌 | Log
+
+-----
+
+### 更新日期: 2020-12-04 18:30:00 ver.0008a
+修改內容:
+* 讓左小搖桿操作上更接近家機版的十字搖桿 例如按左人物就會轉向左並移動一小段距離
+* 在設定檔裡加入一個變數 ACTIVE_WIN_TITLE="暗黑破壞神III"，用來限制程式只能在視窗標題名符合的時候才會有作用
 
 -----
 
