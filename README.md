@@ -1,4 +1,4 @@
-[![youtube demo ](https://blzmedia-a.akamaihd.net/d3/media/screenshots/guide/en-us/uee/xboxone-controls-thumb.jpg)](https://youtu.be/3G3GE3knSkU)
+[![youtube demo ](https://blzmedia-a.akamaihd.net/d3/media/screenshots/guide/en-us/uee/xboxone-controls-thumb.jpg)](https://youtu.be/x4LNk_re8M4)
 
 # D3-Gamepad-Mapper Introduction
 
