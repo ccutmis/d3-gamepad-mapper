@@ -1,7 +1,6 @@
 """ 參考網址: https://stackoverflow.com/questions/60309652/how-to-get-usb-controller-gamepad-to-work-with-python """
-# ver.0008a todo:
-# 加上特殊鍵的輸入例如:esc,tab等等
-import codecs
+# ver.0001b todo:
+# 重寫左右小搖桿的控制判斷 並加入1234按鍵可以一鍵切換持續施法的功能(KEY_ONOFF_MODE用來定義按鍵是否啟用此功能)
 from datetime import datetime
 import win32api
 from time import sleep
@@ -12,51 +11,24 @@ import myModule.mouse_api as Mouse
 from pynput.keyboard import Key, Controller
 import math
 
-theta=30;
-alpha=45;
-theta*=math.pi/180;
-alpha*=math.pi/180;
-sinTheta=math.sin(theta);
-cosTheta=math.cos(theta);
-sinAlpha=math.sin(alpha);
-cosAlpha=math.cos(alpha);
-
-def cod_xy_to_iso_xy(codX,codY):
-  tmpx,tmpz=mapToIsoWorld(codX,codY)
-  tmpx,tmpy=mapToScreen(tmpx,(codY/1.3),tmpz)
-  return int(tmpx),int(tmpy)
-
-def mapToScreen(xpp,ypp,zpp):
-  yp=ypp
-  xp=(xpp*cosAlpha)+(zpp*sinAlpha)
-  zp=(zpp*cosAlpha)-(xpp*sinAlpha)
-  x=xp
-  y=(yp*cosTheta)-(zp*sinTheta)
-  return x,y
-
-def mapToIsoWorld(screenX,screenY):
-  z=(screenX/cosAlpha)-(screenY/(sinAlpha*sinTheta))*(1/(cosAlpha/sinAlpha+sinAlpha/cosAlpha))
-  z=int(z)
-  x=(1/cosAlpha)*(screenX-z*sinAlpha)
-  x=int(x)
-  return x,z
-
-def val_in_key_map(tmp_key):
-    global KEY_MAP
-    for key in KEY_MAP:
-        if key in tmp_key:
-            return KEY_MAP[tmp_key]
-        else:
-            return False
 def process_btns(btns):
     keyboard = Controller()
     global keys_stat_last,KEY_CONFIG,BTN_DICT,str_for_print_last
-    global KEY_MAP
+    global KEY_MAP,KEY_ONOFF_MODE,current_onoff,onoff_list
     x=0
     str_for_print=""
     for i in btns:
         curr_key=KEY_CONFIG[BTN_DICT[x]]
         if i==True: #按下狀態，確認一下先前是否已按，若已按無需再做其它事
+            if KEY_ONOFF_MODE[BTN_DICT[x]]==1:
+                #檢查current_onoff[x]是否為0
+                if BTN_DICT[x] not in onoff_list:
+                    onoff_list.append(BTN_DICT[x])
+                    keyboard.press(curr_key)
+                    sleep(0.1)
+                    keyboard.release(curr_key)
+                else:
+                    onoff_list.remove(BTN_DICT[x])
             if keys_stat_last[x]==True: #先前已按
                 pass
             else:
@@ -77,6 +49,10 @@ def process_btns(btns):
                 keys_stat_last[x]=True
                         
         else:
+            if KEY_ONOFF_MODE[BTN_DICT[x]]==1 and BTN_DICT[x] in onoff_list:
+                keyboard.press(curr_key)
+                sleep(0.1)
+                keyboard.release(curr_key)
             if keys_stat_last[x]==True: #先前已按目前沒按
                 if curr_key not in ["LM","RM"]: #不是滑鼠左右鍵
                     if len(curr_key)==1:
@@ -94,9 +70,6 @@ def process_btns(btns):
                         #Mouse.click(KEY_MAP[curr_key],cx,cy,0)
                 keys_stat_last[x]=False
         x+=1
-    #if str_for_print_last!="":print("\b"*len(str_for_print_last),end="")
-    #print(keys_stat_last)
-    #print(btns)
 
 if __name__ == '__main__':
     try:
@@ -110,6 +83,18 @@ if __name__ == '__main__':
         print(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"\t讀取main_config.ini失敗!請確認該檔是否存在或格式是否錯誤!")
         exit()
     #print("start")
+    w=WindowMgr()
+    #develope mode start
+
+    #D3-Gamepad是否置頂
+    MONITOR_ONTOP=False
+    if MONITOR_ONTOP:
+        #D3-Gamepad的視窗標題
+        MONITOR_TITLE="cmd.exe"
+        w.find_window_wildcard(MONITOR_TITLE)
+        w.set_cmd_title("MY-GAMEPAD-MAPER")
+        w.set_foreground()
+        w.set_window_on_top("MY-GAMEPAD-MAPER",300,200)
     num = JoyStick.joyGetNumDevs()
     ret, caps, startinfo = False, None, None
     for id in range(num):
@@ -130,7 +115,9 @@ if __name__ == '__main__':
     tmp_key_cfg_x=""
     cx,cy=Mouse.get_pos()
     xy_offset=XY_OFFSET_UNIT
-    w=WindowMgr()
+    xy_offset_bonus=0
+    current_onoff=[0,0,0,0,0,0,0,0,0,0]
+    onoff_list=[]
     #全域變數區.end
     while run:
         sleep(DELAY_SECOND)
@@ -152,36 +139,47 @@ if __name__ == '__main__':
                 #左右小搖桿同一時間只能有一個有作用(避免互相干擾)
                 right_stick_is_working=False
                 if any([abs(v) > 10 for v in axisRUV]): #右小搖桿
-                    tx= 0 if axisRUV[1]==128 else ((xy_offset*2) if axisRUV[1]>128 else (-xy_offset*2))
-                    ty = 0 if axisRUV[0]==-129 else ((-xy_offset*2) if axisRUV[0]<-129 else (xy_offset*2))
+                    deg=int(math.atan2(axisRUV[0],axisRUV[1]))
+                    direction="0" if deg==-1 else ("11" if deg==-2 else ("9" if deg==-3 else ("8" if deg==2 else ("6" if deg==1 else ("5" if axisRUV[0]>0 and axisRUV[1]>0 else ("3" if axisRUV[0]==-1 and axisRUV[1]>0 else ("1")))))))
+                    tx= 0 if direction in ["0","6"] else ((xy_offset) if direction in ["5","3","1"] else (-xy_offset))
+                    ty= 0 if direction in ["3","9"] else ((xy_offset) if direction in ["8","6","5"] else (-xy_offset))
                     if tx!=0 or ty!=0:
+                        if xy_offset_bonus<25:
+                            xy_offset_bonus+=1
+                        tx=tx+xy_offset_bonus if tx>=0 else tx-xy_offset_bonus
+                        ty=ty+xy_offset_bonus if ty>=0 else ty-xy_offset_bonus
                         cx,cy=Mouse.move_to(tx,ty)
                         right_stick_is_working=True
+                else:
+                    xy_offset_bonus=0
                 #右小搖桿沒動作的話左邊搖桿才會work
                 if right_stick_is_working==False and any([abs(v) > 10 for v in axisXYZ]): #左小搖桿
-                        tx= 0 if axisXYZ[0]==128 else ((XY_OFFSET_UNIT) if axisXYZ[0]>128 else (-XY_OFFSET_UNIT))
-                        ty = 0 if axisXYZ[1]==-129 else ((-XY_OFFSET_UNIT) if axisXYZ[1]<-129 else (XY_OFFSET_UNIT))
-                        if tx!=0 or ty!=0:
-                            #如果 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True
-                            if SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
-                                tx=tx*8
-                                ty=ty*5 if ty<0 else ty*8
-                                Mouse.set_pos(x_center,y_center)
-                                sleep(0.01)
-                                ofx,ofy=cod_xy_to_iso_xy(x_center+tx,y_center+ty)
-                                Mouse.set_pos(ofx,ofy)
-                                cx,cy=Mouse.get_pos()
-                                Mouse.click('left',cx,cy,1)
-                                sleep(0.01)
-                                Mouse.click('left',cx,cy,0)
-                            else:
-                                tx=tx*2
-                                ty=ty*2
-                                cx,cy=Mouse.move_to(tx,ty)
-                        if axisXYZ[2]>0:
-                            btns[8]=True
-                        elif axisXYZ[2]<0:
-                            btns[9]=True
-    
+                    deg=int(math.atan2(axisXYZ[1],axisXYZ[0]))
+                    #print(axisXYZ[1],axisXYZ[0],deg)
+                    direction="0" if deg==-1 else ("11" if deg==-2 else ("9" if deg==-3 else ("8" if deg==2 else ("6" if deg==1 else ("5" if axisXYZ[1]>0 and axisXYZ[0]>0 else ("3" if axisXYZ[1]==-1 and axisXYZ[0]>0 else ("1")))))))
+                    #print(direction)
+                    tx= 0 if direction in ["0","6"] else ((xy_offset) if direction in ["5","3","1"] else (-xy_offset))
+                    ty= 0 if direction in ["3","9"] else ((xy_offset) if direction in ["8","6","5"] else (-xy_offset))
+
+                    if tx!=0 or ty!=0:
+                        #如果 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True
+                        if SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
+                            tx=tx*8
+                            ty=ty*8 if ty>0 else ty*16
+                            Mouse.set_pos(x_center,y_center)
+                            sleep(0.01)
+                            Mouse.set_pos(x_center+tx,y_center+ty)
+                            cx,cy=Mouse.get_pos()
+                            Mouse.click('left',cx,cy,1)
+                            sleep(0.01)
+                            Mouse.click('left',cx,cy,0)
+                        else:
+                            tx=tx*2
+                            ty=ty*2
+                            cx,cy=Mouse.move_to(tx,ty)
+                    if axisXYZ[2]>0:
+                        btns[8]=True
+                    elif axisXYZ[2]<0:
+                        btns[9]=True
                 process_btns(btns)
     print("按下 [ ← Backspace ] 程式結束")
