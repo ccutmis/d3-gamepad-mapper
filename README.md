@@ -110,9 +110,12 @@ BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_B
 
 ## 4. 注意事項 | Notice
 
-### 系統需求:
+### 設備需求:
 1. Windows7以上作業系統
-2. 目前只用usb介面的xbox相容搖桿測試(羅技)測試OK，沒有無線搖桿也沒經費購買故無法測試(如果有人要提供設備讓我測試的話可以私訊給我^^)。
+2. 目前只用usb介面的xbox相容搖桿測試OK，沒有無線搖桿也沒經費購買故無法測試(如果有人要提供設備讓我測試的話可以私訊給我^^)。
+3. 使用舊式usb介面的ps手把會有問題，建議使用"XBOX360 有線控制器 PC 電腦手把"
+
+![accept-controller](https://ccutmis.github.io/d3-gamepad/xbox-gamepad.jpg)
 
 -----
 
