@@ -53,12 +53,12 @@ KEY_CONFIG={
     "BTN_B":"2",
     "BTN_X":"3",
     "BTN_Y":"4",
-    "BTN_L":"LM", #滑鼠左鍵
-    "BTN_R":"RM", #滑鼠右鍵
-    "BTN_START":"q", #喝水
+    "BTN_L":"esc",
+    "BTN_R":"LM", #滑鼠左鍵
+    "BTN_START":"i", #角色背包
     "BTN_BACK":"t", #回村
-    "TRIG_L":"esc", #左邊Trigger
-    "TRIG_R":"tab" #右邊Trigger
+    "TRIG_L":"q", #左邊Trigger 喝水
+    "TRIG_R":"RM" #右邊Trigger 滑鼠右鍵
 }
 
 #設定按鍵改為ON/OFF模式，就是按一下就保持按下狀態，再按一下就取消，

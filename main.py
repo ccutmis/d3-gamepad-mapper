@@ -11,6 +11,20 @@ import myModule.mouse_api as Mouse
 from pynput.keyboard import Key, Controller
 import math
 
+def kb_press_eval_key(key_val):
+    keyboard = Controller()
+    if len(key_val)==1:
+        keyboard.press(key_val)
+    else:
+        keyboard.press(eval("Key."+key_val))
+
+def kb_release_eval_key(key_val):
+    keyboard = Controller()
+    if len(key_val)==1:
+        keyboard.release(key_val)
+    else:
+        keyboard.release(eval("Key."+key_val))
+
 def process_btns(btns):
     keyboard = Controller()
     global keys_stat_last,KEY_CONFIG,BTN_DICT,str_for_print_last
@@ -20,54 +34,46 @@ def process_btns(btns):
     for i in btns:
         curr_key=KEY_CONFIG[BTN_DICT[x]]
         if i==True: #按下狀態，確認一下先前是否已按，若已按無需再做其它事
-            if KEY_ONOFF_MODE[BTN_DICT[x]]==1:
-                #檢查current_onoff[x]是否為0
-                if BTN_DICT[x] not in onoff_list:
-                    onoff_list.append(BTN_DICT[x])
-                    keyboard.press(curr_key)
-                    sleep(0.1)
-                    keyboard.release(curr_key)
-                else:
-                    onoff_list.remove(BTN_DICT[x])
+
             if keys_stat_last[x]==True: #先前已按
+                if KEY_ONOFF_MODE[BTN_DICT[x]]==1 and BTN_DICT[x] in onoff_list:
+                    onoff_list.remove(BTN_DICT[x])
                 pass
             else:
+                if KEY_ONOFF_MODE[BTN_DICT[x]]==1:
+                    #檢查current_onoff[x]是否為0
+                    if BTN_DICT[x] not in onoff_list:
+                        onoff_list.append(BTN_DICT[x])
+                        kb_press_eval_key(curr_key)
+                        sleep(0.1)
+                        kb_release_eval_key(curr_key)
                 if curr_key not in ["LM","RM"]: #不是按滑鼠左右鍵
-                    if len(curr_key)==1:
-                        keyboard.press(curr_key)
-                    else:
-                        keyboard.press(eval("Key."+curr_key))
-                    #print(curr_key)
+                    kb_press_eval_key(curr_key)
                 else: #是滑鼠左右鍵
                     if curr_key=="LM":
                         Mouse.click('left',cx,cy)
                     elif curr_key=="RM":
                         Mouse.click('right',cx,cy)
                     else:
-                        print(curr_key,"press")
-                        #Mouse.click(KEY_MAP[curr_key],cx,cy)
+                        pass
+                        #print(curr_key,"press")
                 keys_stat_last[x]=True
                         
         else:
             if KEY_ONOFF_MODE[BTN_DICT[x]]==1 and BTN_DICT[x] in onoff_list:
-                keyboard.press(curr_key)
+                kb_press_eval_key(curr_key)
                 sleep(0.1)
-                keyboard.release(curr_key)
+                kb_release_eval_key(curr_key)
             if keys_stat_last[x]==True: #先前已按目前沒按
                 if curr_key not in ["LM","RM"]: #不是滑鼠左右鍵
-                    if len(curr_key)==1:
-                        keyboard.release(curr_key)
-                    else:
-                        keyboard.release(eval("Key."+curr_key))
-                    #keyboard.release(curr_key)
+                    kb_release_eval_key(curr_key)
                 else:
                     if curr_key=="LM":
                         Mouse.click('left',cx,cy,0)
                     elif curr_key=="RM":
                         Mouse.click('right',cx,cy,0)
                     else:
-                        print(curr_key,"release")
-                        #Mouse.click(KEY_MAP[curr_key],cx,cy,0)
+                        pass
                 keys_stat_last[x]=False
         x+=1
 
