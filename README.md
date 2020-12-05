@@ -8,13 +8,13 @@
 
 ## 目錄
 
-1. [關於 D3-Gamepad-Mapper | About](https://github.com/ccutmis/d3-gamepad-mapper#1-%E9%97%9C%E6%96%BC-d3-gamepad-mapper--about)
-2. [下載與安裝 | Download & Install](https://github.com/ccutmis/d3-gamepad-mapper#2-%E4%B8%8B%E8%BC%89%E8%88%87%E5%AE%89%E8%A3%9D%E7%A7%BB%E9%99%A4--download--install)
-3. [如何使用 | How to Use](https://github.com/ccutmis/d3-gamepad-mapper#3-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8--how-to-use)
-4. [注意事項 | Notice](https://github.com/ccutmis/d3-gamepad-mapper#4-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A0%85--notice)
-5. [特別聲明 | Statement](https://github.com/ccutmis/d3-gamepad-mapper#5-%E7%89%B9%E5%88%A5%E8%81%B2%E6%98%8E--statement)
-6. [更新日誌 | Log](https://github.com/ccutmis/d3-gamepad-mapper#6-%E6%9B%B4%E6%96%B0%E6%97%A5%E8%AA%8C--log)
-7. [參考資源 | References](https://github.com/ccutmis/d3-gamepad-mapper#7-%E5%8F%83%E8%80%83%E8%B3%87%E6%BA%90--references)
+1. [關於 D3-Gamepad-Mapper :: About](https://github.com/ccutmis/d3-gamepad-mapper#1-%E9%97%9C%E6%96%BC-d3-gamepad-mapper--about)
+2. [下載與安裝 :: Download & Install](https://github.com/ccutmis/d3-gamepad-mapper#2-%E4%B8%8B%E8%BC%89%E8%88%87%E5%AE%89%E8%A3%9D%E7%A7%BB%E9%99%A4--download--install)
+3. [如何使用 :: How to Use](https://github.com/ccutmis/d3-gamepad-mapper#3-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8--how-to-use)
+4. [注意事項 :: Notice](https://github.com/ccutmis/d3-gamepad-mapper#4-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A0%85--notice)
+5. [特別聲明 :: Statement](https://github.com/ccutmis/d3-gamepad-mapper#5-%E7%89%B9%E5%88%A5%E8%81%B2%E6%98%8E--statement)
+6. [更新日誌 :: Log](https://github.com/ccutmis/d3-gamepad-mapper#6-%E6%9B%B4%E6%96%B0%E6%97%A5%E8%AA%8C--log)
+7. [參考資源 :: References](https://github.com/ccutmis/d3-gamepad-mapper#7-%E5%8F%83%E8%80%83%E8%B3%87%E6%BA%90--references)
 
 -----
 
@@ -59,6 +59,21 @@ KEY_CONFIG={
     "BTN_BACK":"t", #回村
     "TRIG_L":"esc", #左邊Trigger
     "TRIG_R":"tab" #右邊Trigger
+}
+
+#設定按鍵改為ON/OFF模式，就是按一下就保持按下狀態，再按一下就取消，
+#目前設定1234按鍵有這功能，可依自己需求作更改，1為ON，0為OFF。
+KEY_ONOFF_MODE={
+    "BTN_A":0,
+    "BTN_B":0,
+    "BTN_X":0,
+    "BTN_Y":0,
+    "BTN_L":0,
+    "BTN_R":0,
+    "BTN_START":0,
+    "BTN_BACK":0,
+    "TRIG_L":0,
+    "TRIG_R":0
 }
 
 #設定左小搖桿在控制滑鼠移動後是否按一下滑鼠左鍵
