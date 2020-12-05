@@ -91,7 +91,7 @@ BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_B
 
 ```
 
-
+![controller-mapping](https://ccutmis.github.io/d3-gamepad/controller-mapping.jpg)
 
 修改 main_config.ini 注意事項:
 1. 編輯此文件推薦使用Notepad++，如果用記事本編輯在存檔時需注意是否存為"utf-8"文件格式(不可為"Big5"或"utf-8 BOM"格式會出錯)。
