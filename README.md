@@ -2,7 +2,7 @@
 
 # D3-Gamepad-Mapper Introduction
 
-### 更新日期: 2020-12-06 10:45:00 ver.0002b
+### 更新日期: 2020-12-06 21:40:00 ver.0003b
 
 -----
 
@@ -30,7 +30,7 @@
 
 D3-Gamepad-Mapper下載點:
 
-[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0002b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0002b.zip)
+[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0003b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0003b.zip)
 
 下載並解壓縮會得到一個 dist 資料夾，裡面有兩個檔案:
 
@@ -64,8 +64,8 @@ KEY_CONFIG={
 #設定按鍵改為ON/OFF模式，就是按一下就保持按下狀態，再按一下就取消，
 #目前設定所有按鍵關閉此功能，可依自己需求作更改，1為ON，0為OFF，本功能需小心使用。
 KEY_ONOFF_MODE={
-    "BTN_A":0,
-    "BTN_B":0,
+    "BTN_A":1,
+    "BTN_B":1,
     "BTN_X":0,
     "BTN_Y":0,
     "BTN_L":0,
@@ -79,15 +79,18 @@ KEY_ONOFF_MODE={
 #設定左小搖桿在控制滑鼠移動後是否按一下滑鼠左鍵
 #設為 True 則在左小搖桿控制滑鼠移動後會在滑鼠所在位置按一下左鍵，要取消則設為 False
 SET_LEFT_CONTROLLER_MOVE_AND_CLICK = True
+#設定左小搖桿控制滑鼠移動後會點的鍵，假如 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True
+LEFT_CONTROLLER_CLICK_VAL = "LM"
 
 #左右小搖桿控制滑鼠位移的一單位(像素)(基本上勿動)
 XY_OFFSET_UNIT=10
 
 #延時設定(基本上勿動)
-DELAY_SECOND=0.1
+DELAY_SECOND=0.02
 
 #勿動BTN_DICT
 BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_BACK",7:"BTN_START",8:"TRIG_L",9:"TRIG_R"}
+
 
 ```
 
@@ -130,6 +133,12 @@ BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_B
 ## 6. 更新日誌 | Log
 
 -----
+
+### 更新日期: 2020-12-06 21:40:00 ver.0003b
+修改內容:
+* 追加設定檔變數 LEFT_CONTROLLER_CLICK_VAL 來設定右搖桿位移後的動作(目前是按滑鼠左鍵LM)
+* 將設定檔變數 DELAY_SECOND 設為 0.02
+* 重新確認過小搖桿確實可偵測到八方向(其實這還不夠好，未來希望能改為用角度去換算更精確的xy值)
 
 ### 更新日期: 2020-12-06 10:45:00 ver.0002b
 修改內容:

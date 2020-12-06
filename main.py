@@ -1,6 +1,8 @@
 """ 參考網址: https://stackoverflow.com/questions/60309652/how-to-get-usb-controller-gamepad-to-work-with-python """
-# ver.0002b todo:
-# 修正按TRIG_L及TRIG_F時自己會往上移動一小單位的BUG 同時優化了左右搖桿控制滑鼠移動的邏輯判斷
+# ver.0003b todo:
+# 追加設定檔變數 LEFT_CONTROLLER_CLICK_VAL 來設定右搖桿位移後的動作(目前是按滑鼠左鍵LM)
+# 將設定檔變數 DELAY_SECOND 設為 0.02
+# 重新確認過小搖桿確實可偵測到八方向(其實這還不夠好，未來希望能改為用角度去換算更精確的xy值)
 from datetime import datetime
 import win32api
 from time import sleep
@@ -93,7 +95,7 @@ if __name__ == '__main__':
     w=WindowMgr()
     #develope mode start
 
-    #D3-Gamepad是否置頂
+    #D3-Gamepad是否置頂 這是方便自己開發時用的 正式發佈時要把它設為False
     MONITOR_ONTOP=False
     if MONITOR_ONTOP:
         #D3-Gamepad的視窗標題
@@ -151,10 +153,13 @@ if __name__ == '__main__':
                     tx= 0 if direction in ["0","6"] else ((xy_offset) if direction in ["5","3","1"] else (-xy_offset))
                     ty= 0 if direction in ["3","9"] else ((xy_offset) if direction in ["8","6","5"] else (-xy_offset))
                     if tx!=0 or ty!=0:
-                        if xy_offset_bonus<25:
-                            xy_offset_bonus+=1
-                        tx=tx+xy_offset_bonus if tx>=0 else tx-xy_offset_bonus
-                        ty=ty+xy_offset_bonus if ty>=0 else ty-xy_offset_bonus
+                        if xy_offset_bonus<15:
+                            xy_offset_bonus+=0.1
+                        tx=int(tx+xy_offset_bonus if tx>=0 else tx-xy_offset_bonus)
+                        ty=int(ty+xy_offset_bonus if ty>=0 else ty-xy_offset_bonus)
+                        if tx!=0 and ty!=0:
+                            tx=int(tx*0.7)
+                            ty=int(ty*0.7)
                         cx,cy=Mouse.move_to(tx,ty)
                         right_stick_is_working=True
                 else:
@@ -179,13 +184,26 @@ if __name__ == '__main__':
                         elif SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
                             tx=tx*8
                             ty=(ty*8 if ty>0 else ty*16)
+                            if tx!=0 and ty!=0:
+                                tx=int(tx*0.7)
+                                ty=int(ty*0.7)
                             #Mouse.set_pos(x_center,y_center)
                             #sleep(0.01)
                             Mouse.set_pos(x_center+tx,y_center+ty)
                             cx,cy=Mouse.get_pos()
-                            Mouse.click('left',cx,cy,1)
-                            sleep(0.01)
-                            Mouse.click('left',cx,cy,0)
+                            if LEFT_CONTROLLER_CLICK_VAL not in ["LM","RM"]: #不是按滑鼠左右鍵
+                                kb_press_eval_key(LEFT_CONTROLLER_CLICK_VAL)
+                                sleep(0.01)
+                                kb_release_eval_key(LEFT_CONTROLLER_CLICK_VAL)
+                            else: #是滑鼠左右鍵
+                                if LEFT_CONTROLLER_CLICK_VAL=="LM":
+                                    Mouse.click('left',cx,cy)
+                                    sleep(0.01)
+                                    Mouse.click('left',cx,cy,0)
+                                elif LEFT_CONTROLLER_CLICK_VAL=="RM":
+                                    Mouse.click('right',cx,cy)
+                                    sleep(0.01)
+                                    Mouse.click('right',cx,cy,0)
                         else:
                             tx=tx*2
                             ty=ty*2
