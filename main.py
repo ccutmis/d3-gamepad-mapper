@@ -1,6 +1,6 @@
 """ 參考網址: https://stackoverflow.com/questions/60309652/how-to-get-usb-controller-gamepad-to-work-with-python """
-# ver.0001b todo:
-# 重寫左右小搖桿的控制判斷 並加入1234按鍵可以一鍵切換持續施法的功能(KEY_ONOFF_MODE用來定義按鍵是否啟用此功能)
+# ver.0002b todo:
+# 修正按TRIG_L及TRIG_F時自己會往上移動一小單位的BUG 同時優化了左右搖桿控制滑鼠移動的邏輯判斷
 from datetime import datetime
 import win32api
 from time import sleep
@@ -26,6 +26,7 @@ def kb_release_eval_key(key_val):
         keyboard.release(eval("Key."+key_val))
 
 def process_btns(btns):
+    global cx,cy,x_center,y_center
     keyboard = Controller()
     global keys_stat_last,KEY_CONFIG,BTN_DICT,str_for_print_last
     global KEY_MAP,KEY_ONOFF_MODE,current_onoff,onoff_list
@@ -168,12 +169,18 @@ if __name__ == '__main__':
                     ty= 0 if direction in ["3","9"] else ((xy_offset) if direction in ["8","6","5"] else (-xy_offset))
 
                     if tx!=0 or ty!=0:
+                        #如果按的是TRIG_L或TRIG_R
+                        if axisXYZ[2]!=0:
+                            if axisXYZ[2]>0:
+                                btns[8]=True
+                            elif axisXYZ[2]<0:
+                                btns[9]=True
                         #如果 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True
-                        if SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
+                        elif SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
                             tx=tx*8
-                            ty=ty*8 if ty>0 else ty*16
-                            Mouse.set_pos(x_center,y_center)
-                            sleep(0.01)
+                            ty=(ty*8 if ty>0 else ty*16)
+                            #Mouse.set_pos(x_center,y_center)
+                            #sleep(0.01)
                             Mouse.set_pos(x_center+tx,y_center+ty)
                             cx,cy=Mouse.get_pos()
                             Mouse.click('left',cx,cy,1)
@@ -183,9 +190,6 @@ if __name__ == '__main__':
                             tx=tx*2
                             ty=ty*2
                             cx,cy=Mouse.move_to(tx,ty)
-                    if axisXYZ[2]>0:
-                        btns[8]=True
-                    elif axisXYZ[2]<0:
-                        btns[9]=True
+
                 process_btns(btns)
     print("按下 [ ← Backspace ] 程式結束")

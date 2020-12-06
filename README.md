@@ -2,7 +2,7 @@
 
 # D3-Gamepad-Mapper Introduction
 
-### 更新日期: 2020-12-05 14:00:00 ver.0001b
+### 更新日期: 2020-12-06 10:45:00 ver.0002b
 
 -----
 
@@ -30,7 +30,7 @@
 
 D3-Gamepad-Mapper下載點:
 
-[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0001b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0001b.zip)
+[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0002b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0002b.zip)
 
 下載並解壓縮會得到一個 dist 資料夾，裡面有兩個檔案:
 
@@ -130,6 +130,11 @@ BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_B
 ## 6. 更新日誌 | Log
 
 -----
+
+### 更新日期: 2020-12-06 10:45:00 ver.0002b
+修改內容:
+* 修正按TRIG_L及TRIG_F時自己會往上移動一小單位的BUG
+* 同時優化了左右搖桿控制滑鼠移動的邏輯判斷
 
 ### 更新日期: 2020-12-05 14:00:00 ver.0001b
 修改內容:
