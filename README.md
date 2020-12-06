@@ -1,8 +1,8 @@
-[![youtube demo ](https://blzmedia-a.akamaihd.net/d3/media/screenshots/guide/en-us/uee/xboxone-controls-thumb.jpg)](https://youtu.be/x4LNk_re8M4)
+[![youtube demo ](https://blzmedia-a.akamaihd.net/d3/media/screenshots/guide/en-us/uee/xboxone-controls-thumb.jpg)](https://youtu.be/HRGDqcuBUF4)
 
 # D3-Gamepad-Mapper Introduction
 
-### 更新日期: 2020-12-06 21:40:00 ver.0003b
+### 更新日期: 2020-12-07 00:50:00 ver.0003b
 
 -----
 
@@ -134,11 +134,12 @@ BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_B
 
 -----
 
-### 更新日期: 2020-12-06 21:40:00 ver.0003b
+### 更新日期: 2020-12-07 00:50:00 ver.0003b
 修改內容:
 * 追加設定檔變數 LEFT_CONTROLLER_CLICK_VAL 來設定右搖桿位移後的動作(目前是按滑鼠左鍵LM)
+* 追加設定檔變數 Y_CENTER_OFFSETY軸中心點修正(基本上勿動)
 * 將設定檔變數 DELAY_SECOND 設為 0.02
-* 重新確認過小搖桿確實可偵測到八方向(其實這還不夠好，未來希望能改為用角度去換算更精確的xy值)
+* 重新確認過小搖桿確實可偵測到八方向(加上Y軸中心點修正，八方向位移更加正常了)
 
 ### 更新日期: 2020-12-06 10:45:00 ver.0002b
 修改內容:

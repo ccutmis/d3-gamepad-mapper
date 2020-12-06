@@ -136,7 +136,7 @@ if __name__ == '__main__':
         if ACTIVE_WIN_TITLE in w.active_window_title():
             win_pos_size=w.get_window_pos_size() #[x,y,w,h]
             x_center=int(win_pos_size[0]+(win_pos_size[2]/2))
-            y_center=int(win_pos_size[1]+(win_pos_size[3]/2))
+            y_center=int(win_pos_size[1]+(win_pos_size[3]/2)+(Y_CENTER_OFFSET))
             #print(win_pos_size)
             #print(x_center,y_center)
             ret, info = JoyStick.joyGetPosEx(id)
@@ -183,7 +183,7 @@ if __name__ == '__main__':
                         #如果 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True
                         elif SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
                             tx=tx*8
-                            ty=(ty*8 if ty>0 else ty*16)
+                            ty=(ty*8 if ty>0 else ty*8)
                             if tx!=0 and ty!=0:
                                 tx=int(tx*0.7)
                                 ty=int(ty*0.7)
