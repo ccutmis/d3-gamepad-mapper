@@ -2,7 +2,7 @@
 
 # D3-Gamepad-Mapper Introduction
 
-### 更新日期: 2020-12-07 00:50:00 ver.0003b
+### 更新日期: 2020-12-07 21:00:00 ver.0005b
 
 -----
 
@@ -30,7 +30,7 @@
 
 D3-Gamepad-Mapper下載點:
 
-[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0003b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0003b.zip)
+[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0005b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0005b.zip)
 
 下載並解壓縮會得到一個 dist 資料夾，裡面有兩個檔案:
 
@@ -64,8 +64,8 @@ KEY_CONFIG={
 #設定按鍵改為ON/OFF模式，就是按一下就保持按下狀態，再按一下就取消，
 #目前設定所有按鍵關閉此功能，可依自己需求作更改，1為ON，0為OFF，本功能需小心使用。
 KEY_ONOFF_MODE={
-    "BTN_A":1,
-    "BTN_B":1,
+    "BTN_A":0,
+    "BTN_B":0,
     "BTN_X":0,
     "BTN_Y":0,
     "BTN_L":0,
@@ -133,6 +133,10 @@ BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_B
 ## 6. 更新日誌 | Log
 
 -----
+
+###更新日期: 2020-12-07 21:00:00 ver.0005b
+修改內容:
+* 小搖桿操控游標改用角度去換算更精確的xy值完成!
 
 ### 更新日期: 2020-12-07 00:50:00 ver.0003b
 修改內容:

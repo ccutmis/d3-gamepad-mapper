@@ -1,8 +1,6 @@
 """ 參考網址: https://stackoverflow.com/questions/60309652/how-to-get-usb-controller-gamepad-to-work-with-python """
-# ver.0003b todo:
-# 追加設定檔變數 LEFT_CONTROLLER_CLICK_VAL 來設定右搖桿位移後的動作(目前是按滑鼠左鍵LM)
-# 將設定檔變數 DELAY_SECOND 設為 0.02
-# 重新確認過小搖桿確實可偵測到八方向(其實這還不夠好，未來希望能改為用角度去換算更精確的xy值)
+# ver.0005b todo:
+# 小搖桿操控游標改用角度去換算更精確的xy值完成!
 from datetime import datetime
 import win32api
 from time import sleep
@@ -12,6 +10,41 @@ from myModule.WindowMgr import *
 import myModule.mouse_api as Mouse
 from pynput.keyboard import Key, Controller
 import math
+
+def deg_to_xy(deg,radius=10):
+    tmpx=0
+    tmpy=0
+    if deg in(0,90,-90,180):
+        if deg ==0:
+            tmpx=0
+            tmpy=radius
+        elif deg==90:
+            tmpx=radius
+            tmpy=0
+        elif deg==-90:
+            tmpx=-radius
+            tmpy=0
+        else: #deg==180
+            tmpx=0
+            tmpy=-radius
+    else:
+        if deg>0 and deg<90:
+            #print("1~89")
+            tmpx=radius*((deg*1.2)/100)
+            tmpy=radius-(tmpx)
+        elif deg<0 and deg>-90:
+            #print("-1~-89")
+            tmpx=(radius*((deg*1.2)/100))
+            tmpy=radius+(tmpx)
+        elif deg>90 and deg<180:
+            #print("91~179")
+            tmpy=-(radius*(((deg-90)*1.2)/100))
+            tmpx=radius+(tmpy)
+        else: #deg==180
+            #print("-91~-179")
+            tmpy=(radius*(((deg+90)*1.2)/100))
+            tmpx=-(radius+(tmpy))
+    return int(tmpx),int(tmpy)
 
 def kb_press_eval_key(key_val):
     keyboard = Controller()
@@ -148,31 +181,24 @@ if __name__ == '__main__':
                 #左右小搖桿同一時間只能有一個有作用(避免互相干擾)
                 right_stick_is_working=False
                 if any([abs(v) > 10 for v in axisRUV]): #右小搖桿
-                    deg=int(math.atan2(axisRUV[0],axisRUV[1]))
-                    direction="0" if deg==-1 else ("11" if deg==-2 else ("9" if deg==-3 else ("8" if deg==2 else ("6" if deg==1 else ("5" if axisRUV[0]>0 and axisRUV[1]>0 else ("3" if axisRUV[0]==-1 and axisRUV[1]>0 else ("1")))))))
-                    tx= 0 if direction in ["0","6"] else ((xy_offset) if direction in ["5","3","1"] else (-xy_offset))
-                    ty= 0 if direction in ["3","9"] else ((xy_offset) if direction in ["8","6","5"] else (-xy_offset))
+                    degree=int(math.atan2(axisRUV[1],axisRUV[0])/math.pi*180)
+                    tx,ty=deg_to_xy(degree,radius=10)
                     if tx!=0 or ty!=0:
                         if xy_offset_bonus<15:
                             xy_offset_bonus+=0.1
                         tx=int(tx+xy_offset_bonus if tx>=0 else tx-xy_offset_bonus)
                         ty=int(ty+xy_offset_bonus if ty>=0 else ty-xy_offset_bonus)
                         if tx!=0 and ty!=0:
-                            tx=int(tx*0.7)
-                            ty=int(ty*0.7)
+                            tx=int(tx*1.2)
+                            ty=int(ty*1.2)
                         cx,cy=Mouse.move_to(tx,ty)
                         right_stick_is_working=True
                 else:
                     xy_offset_bonus=0
                 #右小搖桿沒動作的話左邊搖桿才會work
                 if right_stick_is_working==False and any([abs(v) > 10 for v in axisXYZ]): #左小搖桿
-                    deg=int(math.atan2(axisXYZ[1],axisXYZ[0]))
-                    #print(axisXYZ[1],axisXYZ[0],deg)
-                    direction="0" if deg==-1 else ("11" if deg==-2 else ("9" if deg==-3 else ("8" if deg==2 else ("6" if deg==1 else ("5" if axisXYZ[1]>0 and axisXYZ[0]>0 else ("3" if axisXYZ[1]==-1 and axisXYZ[0]>0 else ("1")))))))
-                    #print(direction)
-                    tx= 0 if direction in ["0","6"] else ((xy_offset) if direction in ["5","3","1"] else (-xy_offset))
-                    ty= 0 if direction in ["3","9"] else ((xy_offset) if direction in ["8","6","5"] else (-xy_offset))
-
+                    degree=int(math.atan2(axisXYZ[0],axisXYZ[1])/math.pi*180)
+                    tx,ty=deg_to_xy(degree,radius=10)
                     if tx!=0 or ty!=0:
                         #如果按的是TRIG_L或TRIG_R
                         if axisXYZ[2]!=0:
@@ -185,8 +211,8 @@ if __name__ == '__main__':
                             tx=tx*8
                             ty=(ty*8 if ty>0 else ty*8)
                             if tx!=0 and ty!=0:
-                                tx=int(tx*0.7)
-                                ty=int(ty*0.7)
+                                tx=int(tx*1.2)
+                                ty=int(ty*1.2)
                             #Mouse.set_pos(x_center,y_center)
                             #sleep(0.01)
                             Mouse.set_pos(x_center+tx,y_center+ty)
