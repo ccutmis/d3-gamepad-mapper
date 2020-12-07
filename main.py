@@ -182,15 +182,15 @@ if __name__ == '__main__':
                 right_stick_is_working=False
                 if any([abs(v) > 10 for v in axisRUV]): #右小搖桿
                     degree=int(math.atan2(axisRUV[1],axisRUV[0])/math.pi*180)
-                    tx,ty=deg_to_xy(degree,radius=10)
+                    tx,ty=deg_to_xy(degree,radius=XY_OFFSET_UNIT)
                     if tx!=0 or ty!=0:
                         if xy_offset_bonus<15:
                             xy_offset_bonus+=0.1
                         tx=int(tx+xy_offset_bonus if tx>=0 else tx-xy_offset_bonus)
                         ty=int(ty+xy_offset_bonus if ty>=0 else ty-xy_offset_bonus)
                         if tx!=0 and ty!=0:
-                            tx=int(tx*1.2)
-                            ty=int(ty*1.2)
+                            tx=int(tx*1.618)
+                            ty=int(ty*1.618)
                         cx,cy=Mouse.move_to(tx,ty)
                         right_stick_is_working=True
                 else:
@@ -198,7 +198,7 @@ if __name__ == '__main__':
                 #右小搖桿沒動作的話左邊搖桿才會work
                 if right_stick_is_working==False and any([abs(v) > 10 for v in axisXYZ]): #左小搖桿
                     degree=int(math.atan2(axisXYZ[0],axisXYZ[1])/math.pi*180)
-                    tx,ty=deg_to_xy(degree,radius=10)
+                    tx,ty=deg_to_xy(degree,radius=XY_OFFSET_UNIT)
                     if tx!=0 or ty!=0:
                         #如果按的是TRIG_L或TRIG_R
                         if axisXYZ[2]!=0:
@@ -209,10 +209,10 @@ if __name__ == '__main__':
                         #如果 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True
                         elif SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
                             tx=tx*8
-                            ty=(ty*8 if ty>0 else ty*8)
+                            ty=ty*8
                             if tx!=0 and ty!=0:
-                                tx=int(tx*1.2)
-                                ty=int(ty*1.2)
+                                tx=int(tx*1.618)
+                                ty=int(ty*1.618)
                             #Mouse.set_pos(x_center,y_center)
                             #sleep(0.01)
                             Mouse.set_pos(x_center+tx,y_center+ty)
