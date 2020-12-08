@@ -11,74 +11,24 @@ import myModule.mouse_api as Mouse
 from pynput.keyboard import Key, Controller
 import math
 
-def deg_to_xy(deg,radius=10):
-    tmpx=0
-    tmpy=0
-    if deg in(0,90,-90,180):
-        if deg ==0:
-            tmpx,tmpy=0,radius
-        elif deg==90:
-            tmpx,tmpy=radius,0
-        elif deg==-90:
-            tmpx,tmpy=-radius,0
-        else: #deg==180
-            tmpx,tmpy=0,-radius
-    else:
-        if deg>0 and deg<90:
-            print("1~89")
-            tmpdeg=deg
-            if tmpdeg<=30:
-                tmpx=radius*(0.3)
-                tmpy=radius*(0.9)
-            elif tmpdeg>60:
-                tmpx=radius*(0.9)
-                tmpy=radius*(0.3)
-            else:
-                tmpx=radius*(0.7)
-                tmpy=radius*(0.7)
-        elif deg<0 and deg>-90:
-            print("-1~-89")
-            #tmpx=(radius*((deg*1.2)/100))
-            #tmpy=radius+(tmpx)
-            tmpdeg=deg
-            if tmpdeg<=30:
-                tmpx=-radius*(0.3)
-                tmpy=radius*(0.9)
-            elif tmpdeg>60:
-                tmpx=-radius*(0.9)
-                tmpy=radius*(0.3)
-            else:
-                tmpx=-radius*(0.7)
-                tmpy=radius*(0.7)
-        elif deg>90 and deg<180:
-            print("91~179")
-            #tmpy=-(radius*(((deg-90)*1.2)/100))
-            #tmpx=radius+(tmpy)
-            tmpdeg=deg-90
-            if tmpdeg<=30:
-                tmpx=radius*(0.3)
-                tmpy=-radius*(0.9)
-            elif tmpdeg>60:
-                tmpx=radius*(0.9)
-                tmpy=-radius*(0.3)
-            else:
-                tmpx=radius*(0.7)
-                tmpy=-radius*(0.7)
-        else:
-            print("-91~-179")
-            #tmpy=(radius*(((deg+90)*1.2)/100))
-            #tmpx=-(radius+(tmpy))
-            tmpdeg=deg+90
-            if tmpdeg<=30:
-                tmpx=-radius*(0.3)
-                tmpy=-radius*(0.9)
-            elif tmpdeg>60:
-                tmpx=-radius*(0.9)
-                tmpy=-radius*(0.3)
-            else:
-                tmpx=-radius*(0.7)
-                tmpy=-radius*(0.7)
-    return int(tmpx),int(tmpy)
+def gent_degree_dict(divisions=360,radius=10):
+    #divisions,radius=360,10
+    out_dict={}
+    # the difference between angles in radians -- don't bother with degrees
+    angle = 2 * math.pi / divisions
+    # a list of all angles using a list comprehension
+    angles = [i*angle for i in range(divisions)]
+    oi=0
+    for a in angles:
+        out_dict[oi]=[int(radius*math.sin(a)),(int(radius*math.cos(a)))]
+        oi+=1
+    #out_dict[divisions]=[0,10]
+    return out_dict
+
+def deg_to_xy(deg):
+    global DEG_DICT
+    xy_list=DEG_DICT[deg]
+    return xy_list[0],xy_list[1]
 
 def kb_press_eval_key(key_val):
     keyboard = Controller()
@@ -194,6 +144,8 @@ if __name__ == '__main__':
     xy_offset_bonus=0
     current_onoff=[0,0,0,0,0,0,0,0,0,0]
     onoff_list=[]
+    DEG_DICT=gent_degree_dict(360,XY_OFFSET_UNIT)
+    #print(DEG_DICT[0])
     #全域變數區.end
     while run:
         sleep(DELAY_SECOND)
@@ -216,15 +168,15 @@ if __name__ == '__main__':
                 right_stick_is_working=False
                 if any([abs(v) > 10 for v in axisRUV]): #右小搖桿
                     degree=int(math.atan2(axisRUV[1],axisRUV[0])/math.pi*180)
-                    tx,ty=deg_to_xy(degree,radius=XY_OFFSET_UNIT)
+                    if degree<0: 
+                        degree=180+(180+degree)
+                    print(degree)
+                    tx,ty=deg_to_xy(degree)
                     if tx!=0 or ty!=0:
                         if xy_offset_bonus<15:
                             xy_offset_bonus+=0.1
                         tx=int(tx+xy_offset_bonus if tx>=0 else tx-xy_offset_bonus)
                         ty=int(ty+xy_offset_bonus if ty>=0 else ty-xy_offset_bonus)
-                        if tx!=0 and ty!=0:
-                            tx=int(tx*1.618)
-                            ty=int(ty*1.618)
                         cx,cy=Mouse.move_to(tx,ty)
                         right_stick_is_working=True
                 else:
@@ -232,7 +184,10 @@ if __name__ == '__main__':
                 #右小搖桿沒動作的話左邊搖桿才會work
                 if right_stick_is_working==False and any([abs(v) > 10 for v in axisXYZ]): #左小搖桿
                     degree=int(math.atan2(axisXYZ[0],axisXYZ[1])/math.pi*180)
-                    tx,ty=deg_to_xy(degree,radius=XY_OFFSET_UNIT)
+                    if degree<0: 
+                        degree=180+(180+degree)
+                    print(degree)
+                    tx,ty=deg_to_xy(degree)
                     if tx!=0 or ty!=0:
                         #如果按的是TRIG_L或TRIG_R
                         if axisXYZ[2]!=0:
@@ -244,9 +199,7 @@ if __name__ == '__main__':
                         elif SET_LEFT_CONTROLLER_MOVE_AND_CLICK:
                             tx=tx*8
                             ty=ty*8
-                            if tx!=0 and ty!=0:
-                                tx=int(tx*1.618)
-                                ty=int(ty*1.618)
+
                             #Mouse.set_pos(x_center,y_center)
                             #sleep(0.01)
                             Mouse.set_pos(x_center+tx,y_center+ty)
