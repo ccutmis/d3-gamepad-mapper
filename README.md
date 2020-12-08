@@ -1,8 +1,8 @@
-[![youtube demo ](https://blzmedia-a.akamaihd.net/d3/media/screenshots/guide/en-us/uee/xboxone-controls-thumb.jpg)](https://youtu.be/HRGDqcuBUF4)
+[![youtube demo ](https://blzmedia-a.akamaihd.net/d3/media/screenshots/guide/en-us/uee/xboxone-controls-thumb.jpg)](https://youtu.be/qJm7donts0g)
 
 # D3-Gamepad-Mapper Introduction
 
-### 更新日期: 2020-12-07 21:00:00 ver.0005b
+### 更新日期: 2020-12-08 19:00:00 ver.0006b
 
 -----
 
@@ -30,7 +30,7 @@
 
 D3-Gamepad-Mapper下載點:
 
-[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0005b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0005b.zip)
+[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0006b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0006b.zip)
 
 下載並解壓縮會得到一個 dist 資料夾，裡面有兩個檔案:
 
@@ -134,6 +134,11 @@ BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_B
 
 -----
 
+### 更新日期: 2020-12-08 19:00:00 ver.0006b
+修改內容:
+* 小搖桿操控游標改用角度去換算更精確的xy值完成!(先前版本仍有些問題，目前確實做到0-360度可反推xy座標了。
+* 將版本號及目標視窗顯示在程式執行時的頁面(方便獲取相關訊息)
+
 ###更新日期: 2020-12-07 21:00:00 ver.0005b
 修改內容:
 * 小搖桿操控游標改用角度去換算更精確的xy值完成!
@@ -160,20 +165,14 @@ BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_B
 * 讓左小搖桿操作上更接近家機版的十字搖桿 例如按左人物就會轉向左並移動一小段距離
 * 在設定檔裡加入一個變數 ACTIVE_WIN_TITLE="暗黑破壞神III"，用來限制程式只能在視窗標題名符合的時候才會有作用
 
------
-
 ### 更新日期: 2020-12-03 09:00:00 ver.0007a:
 * 重寫左右小搖桿的運作規則，#左右小搖桿同一時間只能有一個有作用(避免互相干擾)，右小搖桿沒動作的話左邊搖桿才會work
 * TRIG_L跟TRIG_R的按鍵修復
-
------
 
 ### 更新日期: 2020-12-03 00:10:00 ver.0006a
 1. 改善按鍵效果，目前按住abxy左右鍵可持續施放技能，不會再有卡卡的現象了
 2. 打包時遇到一個情況是 pynput 模組太新導致報錯，最後參考這個方法解決了
 Please fall back to 1.6.8 version of pynput. pip install pynput==1.6.8
-
------
 
 ### 更新日期: 2020-12-02 20:05:00 ver.0005a
 1. 為了判斷滑鼠按鍵狀態需用到win32api模組(已匯入使用)
@@ -182,8 +181,6 @@ Please fall back to 1.6.8 version of pynput. pip install pynput==1.6.8
 4. 在 main_config.ini 裡加入了左小搖桿控制滑鼠移動後是否立刻按一下左鍵的設定
 5. 重寫左右小搖桿控制滑鼠移動的部份(可能還有bug)
 目前就等下班測試沒問題再發佈到gitpage&巴哈
-
------
 
 ### 更新日期: 2020-12-01 19:40:00 ver.0003a
 修正了滑鼠右鍵無法復歸的問題，同時將左右小搖桿控制滑鼠移動的代碼作了一些優化。
