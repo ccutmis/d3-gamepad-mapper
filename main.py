@@ -120,7 +120,7 @@ if __name__ == '__main__':
             f.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+'\t'+errMsg+'\n')
         print(errMsg)
         print(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"\t讀取main_config.ini失敗!請確認該檔是否存在或格式是否錯誤!")
-        exit()
+        sys.exit()
     try:
         if DEBUG_MODE:
             print("DEBUG START")
@@ -148,7 +148,7 @@ if __name__ == '__main__':
                 break
         else:
             print("未偵測到控制器。")
-            exit()
+            sys.exit()
         #全域變數區.start
         KEY_MAP={"alt":Key.alt,"alt_l":Key.alt_l,"alt_r":Key.alt_r,"backspace":Key.backspace,"caps_lock":Key.caps_lock,"cmd":Key.cmd,"cmd_r":Key.cmd_r,"ctrl":Key.ctrl,"ctrl_l":Key.ctrl_l,"ctrl_r":Key.ctrl_r,"delete":Key.delete,"down":Key.down,"end":Key.end,"enter":Key.enter,"esc":Key.esc,"f1":Key.f1,"f10":Key.f10,"f11":Key.f11,"f12":Key.f12,"f13":Key.f13,"f14":Key.f14,"f15":Key.f15,"f16":Key.f16,"f17":Key.f17,"f18":Key.f18,"f19":Key.f19,"f2":Key.f2,"f20":Key.f20,"f3":Key.f3,"f4":Key.f4,"f5":Key.f5,"f6":Key.f6,"f7":Key.f7,"f8":Key.f8,"f9":Key.f9,"home":Key.home,"insert":Key.insert,"left":Key.left,"menu":Key.menu,"num_lock":Key.num_lock,"page_down":Key.page_down,"page_up":Key.page_up,"pause":Key.pause,"print_screen":Key.print_screen,"right":Key.right,"scroll_lock":Key.scroll_lock,"shift":Key.shift,"shift_r":Key.shift_r,"space":Key.space,"tab":Key.tab,"up":Key.up}
         keys_stat_last=[False,False,False,False,False,False,False,False,False,False]
@@ -248,7 +248,7 @@ if __name__ == '__main__':
         with open('main_runtime_error.log','a+',encoding='utf-8') as f:
             f.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+'\t'+errMsg+'\n')
         print(errMsg)
-        exit()
+        sys.exit()
     if DEBUG_MODE:
         fp.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+'\tDEBUG記錄結束\n')
         print("DEBUG STOP")
