@@ -2,7 +2,7 @@
 
 # D3-Gamepad-Mapper Introduction
 
-### 更新日期: 2020-12-08 19:00:00 ver.0006b
+### 更新日期: 2020-12-09 10:00:00 ver.0007b
 
 -----
 
@@ -30,7 +30,7 @@
 
 D3-Gamepad-Mapper下載點:
 
-[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0006b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0006b.zip)
+[https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0007b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0007b.zip)
 
 下載並解壓縮會得到一個 dist 資料夾，裡面有兩個檔案:
 
@@ -133,6 +133,11 @@ BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_B
 ## 6. 更新日誌 | Log
 
 -----
+
+### 更新日期: 2020-12-09 10:00:00 ver.0007b
+修改內容:
+* 使用traceback模組 在程式執行出錯時將錯誤報告記錄到 main_runtime_error.log
+* 追加設定檔變數 DEBUG_MODE 用來設定是否啟用degug模式，若為 False 則不進行debug動作；若為 True 則會將執行中的按鍵且左右搖桿三軸的狀況寫入到main_degug.txt，這個動作會進行頻繁寫入文字檔的動作，除非有特殊原因要進行除錯，否則請讓它保持在 False 的值。
 
 ### 更新日期: 2020-12-08 19:00:00 ver.0006b
 修改內容:

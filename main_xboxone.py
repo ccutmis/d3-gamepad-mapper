@@ -1,6 +1,7 @@
 """ 參考網址: https://stackoverflow.com/questions/60309652/how-to-get-usb-controller-gamepad-to-work-with-python """
 # ver.0007b todo:
-# 小搖桿操控游標改用角度去換算更精確的xy值完成!
+# 使用traceback模組 在程式執行出錯時將錯誤報告記錄到 main_runtime_error.log
+# 追加設定檔變數 DEBUG_MODE 用來設定是否啟用degug模式，若為 False 則不進行debug動作；若為 True 則會將執行中的按鍵且左右搖桿三軸的狀況寫入到main_degug.txt，這個動作會進行頻繁寫入文字檔的動作，除非有特殊原因要進行除錯，否則請讓它保持在 False 的值。
 from datetime import datetime
 import win32api
 from time import sleep
@@ -10,7 +11,7 @@ from myModule.WindowMgr import *
 import myModule.mouse_api as Mouse
 from pynput.keyboard import Key, Controller
 import math
-import traceback
+import traceback,sys
 VERSION="0007b"
 
 def gent_degree_dict(divisions=360,radius=10):
@@ -117,11 +118,15 @@ if __name__ == '__main__':
         funcName = lastCallStack[2] #取得發生的函數名稱
         errMsg = "File \"{}\", line {}, in {}: [{}] {}".format(fileName, lineNum, funcName, error_class, detail)
         with open('main_runtime_error.log','a+',encoding='utf-8') as f:
-            f.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+'\t'+loc_mode+'\t'+script_loc+'\t'+errMsg+'\n')
+            f.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+'\t'+errMsg+'\n')
         print(errMsg)
         print(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"\t讀取main_config.ini失敗!請確認該檔是否存在或格式是否錯誤!")
         exit()
     try:
+        if DEBUG_MODE:
+            print("DEBUG START")
+            fp=open('main_runtime.log','w+')
+            fp.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+'\tDEBUG記錄開始\n')
         #print("start")
         w=WindowMgr()
         #develope mode start
@@ -166,6 +171,7 @@ if __name__ == '__main__':
             #判斷當前視窗完整標題文字是否包含 ACTIVE_WIN_TITLE 設定之文字，若是才繼續後續處理...
             if ACTIVE_WIN_TITLE in w.active_window_title():
                 win_pos_size=w.get_window_pos_size() #[x,y,w,h]
+                sleep(DELAY_SECOND)
                 x_center=int(win_pos_size[0]+(win_pos_size[2]/2))
                 y_center=int(win_pos_size[1]+(win_pos_size[3]/2)+(Y_CENTER_OFFSET))
                 #print(win_pos_size)
@@ -175,10 +181,12 @@ if __name__ == '__main__':
                     btns = [(1 << i) & info.dwButtons != 0 for i in range(caps.wNumButtons)]
                     axisXYZ = [info.dwXpos-startinfo.dwXpos, info.dwYpos-startinfo.dwYpos, info.dwZpos-startinfo.dwZpos]
                     axisRUV = [info.dwRpos-startinfo.dwRpos, info.dwUpos-startinfo.dwUpos, info.dwVpos-startinfo.dwVpos]
-        
+                    if DEBUG_MODE:
+                        fp.writelines(str(btns)+"\t"+str(axisXYZ)+"\t"+str(axisRUV)+"\n")
                     #左右小搖桿同一時間只能有一個有作用(避免互相干擾)
                     right_stick_is_working=False
-                    if any([abs(v) > 10 for v in axisRUV]): #右小搖桿
+                    #if any([abs(v) > 10 for v in axisRUV]): #右小搖桿
+                    if abs(axisRUV[0]) > 10 or abs(axisRUV[1]) > 10 : #右小搖桿
                         degree=int(math.atan2(axisRUV[1],axisRUV[0])/math.pi*180)
                         if degree<0: 
                             degree=180+(180+degree)
@@ -239,7 +247,11 @@ if __name__ == '__main__':
         funcName = lastCallStack[2] #取得發生的函數名稱
         errMsg = "File \"{}\", line {}, in {}: [{}] {}".format(fileName, lineNum, funcName, error_class, detail)
         with open('main_runtime_error.log','a+',encoding='utf-8') as f:
-            f.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+'\t'+loc_mode+'\t'+script_loc+'\t'+errMsg+'\n')
+            f.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+'\t'+errMsg+'\n')
         print(errMsg)
         exit()
+    if DEBUG_MODE:
+        fp.writelines(datetime.now().strftime("%Y-%m-%d %H:%M:%S")+'\tDEBUG記錄結束\n')
+        print("DEBUG STOP")
+        fp.close()
     print("按下 [ ← Backspace ] 程式結束")
