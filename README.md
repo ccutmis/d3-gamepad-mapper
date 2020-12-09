@@ -209,6 +209,9 @@ Please fall back to 1.6.8 version of pynput. pip install pynput==1.6.8
 ### D3官網對於家機搖桿的設置參考
 https://diablo3.blizzard.com/en-us/game/guide/gameplay/fundamentals
 
+### pygame.joystick(參考頁面里的搖桿分類)
+https://www.pygame.org/docs/ref/joystick.html
+
 ### get controller event:
 https://stackoverflow.com/questions/60309652/how-to-get-usb-controller-gamepad-to-work-with-python
 
