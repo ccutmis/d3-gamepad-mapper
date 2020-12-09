@@ -88,9 +88,14 @@ XY_OFFSET_UNIT=10
 #延時設定(基本上勿動)
 DELAY_SECOND=0.02
 
+#Y軸中心點修正(基本上勿動)
+Y_CENTER_OFFSET=-(XY_OFFSET_UNIT*5)
+
 #勿動BTN_DICT
 BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_BACK",7:"BTN_START",8:"TRIG_L",9:"TRIG_R"}
 
+#是否啟用degug模式(勿動) 預設值為False
+DEBUG_MODE=False
 
 ```
 
