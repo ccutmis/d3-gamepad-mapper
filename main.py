@@ -181,7 +181,7 @@ if __name__ == '__main__':
                     axisXYZ = [info.dwXpos-startinfo.dwXpos, info.dwYpos-startinfo.dwYpos, info.dwZpos-startinfo.dwZpos]
                     axisRUV = [info.dwRpos-startinfo.dwRpos, info.dwUpos-startinfo.dwUpos, info.dwVpos-startinfo.dwVpos]
                     if DEBUG_MODE:
-                        fp.writelines(str(btns)+"\t"+str(axisXYZ)+"\t"+str(axisRUV)+"\t"+pov+"\n")
+                        fp.writelines(str(btns)+"\t"+str(axisXYZ)+"\t"+str(axisRUV)+"\t"+str(pov)+"\n")
                     if joystick_type==0 or joystick_type==2:
                         if pov==0:
                             btns[10]=True
