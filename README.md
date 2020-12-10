@@ -32,22 +32,25 @@ D3-Gamepad-Mapper下載點:
 
 [https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0008b.zip](https://ccutmis.github.io/d3-gamepad/d3-gamepad-exe-0008b.zip)
 
-下載並解壓縮會得到一個 dist 資料夾，裡面有兩個檔案:
+下載並解壓縮會得到一個 dist 資料夾，裡面有四個檔案:
 
 * main.exe (主程式直接點兩下即可執行)
-* main_config.ini (設定檔，建議使用Notepad++編輯)
+* xbox360.ini (xbox360相容設定檔，建議使用Notepad++編輯)
+* xboxOne.ini (xboxOne相容設定檔，建議使用Notepad++編輯)
+* others.ini (其它未分類設定檔，內容暫時使用xbox360.ini)
 
 本軟體無需安裝，將下載完成解壓縮的資料夾放到桌面(或好找的路徑)即完成部署。程式執行時不會修改電腦機碼，若要移除就是直接把主程式跟設定檔刪除即可。
 
-### main_config.ini 設定檔內容
+### ini 設定檔內容-可自定義部份
 
+xbox360.ini
 ```
 #這是一行註解
 
 #設定要啟用搖桿對應的程式標題文字，防止在切換不同視窗程式時可能造成的誤操作
 ACTIVE_WIN_TITLE="暗黑破壞神III"
 
-#key_config字典用來定義按鍵值
+#key_config字典用來定義按鍵值(設""則該鍵無作用)
 KEY_CONFIG={
     "BTN_A":"1",
     "BTN_B":"2",
@@ -58,7 +61,11 @@ KEY_CONFIG={
     "BTN_START":"i", #角色背包
     "BTN_BACK":"t", #回村
     "TRIG_L":"q", #左邊Trigger 喝水
-    "TRIG_R":"RM" #右邊Trigger 滑鼠右鍵
+    "TRIG_R":"RM", #右邊Trigger 滑鼠右鍵
+	"DPAD_UP":"tab",
+	"DPAD_DOWN":"m",
+	"DPAD_LEFT":"i",
+	"DPAD_RIGHT":"s"
 }
 
 #設定按鍵改為ON/OFF模式，就是按一下就保持按下狀態，再按一下就取消，
@@ -73,7 +80,11 @@ KEY_ONOFF_MODE={
     "BTN_START":0,
     "BTN_BACK":0,
     "TRIG_L":0,
-    "TRIG_R":0
+    "TRIG_R":0,
+	"DPAD_UP":0,
+	"DPAD_DOWN":0,
+	"DPAD_LEFT":0,
+	"DPAD_RIGHT":0
 }
 
 #設定左小搖桿在控制滑鼠移動後是否按一下滑鼠左鍵
@@ -82,20 +93,61 @@ SET_LEFT_CONTROLLER_MOVE_AND_CLICK = True
 #設定左小搖桿控制滑鼠移動後會點的鍵，假如 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True
 LEFT_CONTROLLER_CLICK_VAL = "LM"
 
-#左右小搖桿控制滑鼠位移的一單位(像素)(基本上勿動)
-XY_OFFSET_UNIT=10
+```
 
-#延時設定(基本上勿動)
-DELAY_SECOND=0.02
+xboxOne.ini
+```
+#這是一行註解
 
-#Y軸中心點修正(基本上勿動)
-Y_CENTER_OFFSET=-(XY_OFFSET_UNIT*5)
+#設定要啟用搖桿對應的程式標題文字，防止在切換不同視窗程式時可能造成的誤操作
+ACTIVE_WIN_TITLE="暗黑破壞神III"
 
-#勿動BTN_DICT
-BTN_DICT={0:"BTN_A", 1:"BTN_B",2:"BTN_X", 3:"BTN_Y",4:"BTN_L",5:"BTN_R",6:"BTN_BACK",7:"BTN_START",8:"TRIG_L",9:"TRIG_R"}
+#key_config字典用來定義按鍵值(設""則該鍵無作用)
+KEY_CONFIG={ 
+	"BTN_CROSS":"1",
+	"BTN_CIRCLE":"2",
+	"BTN_SQUARE":"3",
+	"BTN_TRIANGLE":"4",
+	"BTN_SHARE":"",
+	"BTN_PS":"",
+	"BTN_OPTIONS":"",
+	"STICK_L":"q",
+	"STICK_R":"RM",
+	"BUMPER_L":"esc",
+	"BUMPER_R":"RM",
+	"DPAD_UP":"tab",
+	"DPAD_DOWN":"t",
+	"DPAD_LEFT":"i",
+	"DPAD_RIGHT":"s",
+	"TOUCHPAD":""
+}
 
-#是否啟用degug模式(勿動) 預設值為False
-DEBUG_MODE=False
+#設定按鍵改為ON/OFF模式，就是按一下就保持按下狀態，再按一下就取消，
+#目前設定所有按鍵關閉此功能，可依自己需求作更改，1為ON，0為OFF，本功能需小心使用。
+KEY_ONOFF_MODE={
+	"BTN_CROSS":0,
+	"BTN_CIRCLE":0,
+	"BTN_SQUARE":0,
+	"BTN_TRIANGLE":0,
+	"BTN_SHARE":0,
+	"BTN_PS":0,
+	"BTN_OPTIONS":0,
+	"STICK_L":0,
+	"STICK_R":0,
+	"BUMPER_L":0,
+	"BUMPER_R":0,
+	"DPAD_UP":0,
+	"DPAD_DOWN":0,
+	"DPAD_LEFT":0,
+	"DPAD_RIGHT":0,
+	"TOUCHPAD":0
+}
+
+#設定左小搖桿在控制滑鼠移動後是否按一下滑鼠左鍵
+#設為 True 則在左小搖桿控制滑鼠移動後會在滑鼠所在位置按一下左鍵，要取消則設為 False
+SET_LEFT_CONTROLLER_MOVE_AND_CLICK = True
+#設定左小搖桿控制滑鼠移動後會點的鍵，假如 SET_LEFT_CONTROLLER_MOVE_AND_CLICK 為 True
+LEFT_CONTROLLER_CLICK_VAL = "LM"
 
 ```
 
