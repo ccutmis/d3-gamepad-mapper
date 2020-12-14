@@ -1,3 +1,7 @@
+# 本Repo已廢除不再更新 請轉至 Repo:d3-gamepad獲取更新訊息
+
+[https://github.com/ccutmis/d3-gamepad](https://github.com/ccutmis/d3-gamepad)
+
 [![youtube demo ](https://blzmedia-a.akamaihd.net/d3/media/screenshots/guide/en-us/uee/xboxone-controls-thumb.jpg)](https://youtu.be/qJm7donts0g)
 
 # D3-Gamepad-Mapper Introduction
