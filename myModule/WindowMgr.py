@@ -1,5 +1,10 @@
-import os,win32gui, win32com.client, re, subprocess, win32con, ctypes
+WINDOWMGR_VERSION="00001A"
+import win32gui, win32com.client, win32con, winxpgui, win32api, ctypes
+from os import system
 from time import sleep
+from re import match
+from subprocess import Popen,PIPE
+
 """Encapsulates some calls to the winapi for window management"""
 class WindowMgr:
     """ 建構式 """
@@ -13,7 +18,7 @@ class WindowMgr:
 
     """Pass to win32gui.EnumWindows() to check all the opened windows"""
     def _window_enum_callback(self, hwnd, wildcard):
-        if re.match(".*?"+wildcard+"*", str(win32gui.GetWindowText(hwnd))) is not None:
+        if match(".*?"+wildcard+"*", str(win32gui.GetWindowText(hwnd))) is not None:
             self._handle = hwnd
             self.is_exist = True
 
@@ -79,7 +84,7 @@ class WindowMgr:
     ### 用taskkill /f /im 的dos cmd強制目標程式結束運作 ###
     def end_process(self,process_name):
         try:
-            os.system("taskkill /f /im "+process_name)
+            system("taskkill /f /im "+process_name)
         except:
             pass
 
@@ -97,7 +102,7 @@ class WindowMgr:
         if not self.is_exist:
             #subprocess.Popen(program_loc)
             cmd = program_loc if program_param=='' else program_loc+" "+program_param
-            subprocess.Popen(cmd, stdout=subprocess.PIPE, creationflags=0x08000000)
+            Popen(cmd, stdout=PIPE, creationflags=0x08000000)
             while not self.is_exist:
                 #print(self.is_exist)
                 msg_str = 'finding window please wait...'
@@ -120,10 +125,11 @@ class WindowMgr:
             #print("將視窗"+wildcard+"設為非上層視窗\n視窗width: "+str(win_w)+" 視窗height: "+str(win_h))
         sleep(0.5)
 
-    """ 印出tmp_dict字典的keys:values """
-    def help(self,tmp_dict):
-        #print(tmp_dict)
-        print("===== 所有的中文函式範例 =====")
-        for k, v in tmp_dict.items():
-            print(k,':',v)
-        print("==============================")
+    """ 半透明視窗(wildcard,alpha_val=180) """
+    ### 將目標視窗設為半透明狀態(alpha_val值範圍0-255) ###
+    def set_window_alpha(self, wildcard, alpha_val=180):
+        self.reset()
+        self.find_window_wildcard(wildcard)
+        self.set_foreground()
+        win32gui.SetWindowLong (self._handle, win32con.GWL_EXSTYLE, win32gui.GetWindowLong (self._handle, win32con.GWL_EXSTYLE ) | win32con.WS_EX_LAYERED )
+        winxpgui.SetLayeredWindowAttributes(self._handle, win32api.RGB(0,0,0), alpha_val, win32con.LWA_ALPHA)
